@@ -17,7 +17,6 @@
 """Checks the consistency between the zotfile-managed directory and the database"""
 
 import argparse
-import fnmatch
 import os
 import pathlib
 import re
@@ -29,7 +28,7 @@ def get_db_set(db, d):
     conn = sqlite3.connect(db)
 
     db_c = conn.execute(
-        'select path from itemAttachments where linkMode = 2 or linkMode = 3 and contentType = "application/pdf"')
+        'select path from itemAttachments where linkMode = 2 or linkMode = 3 and (contentType = "application/pdf" or contentType = "application/djvu") ')
     db_d = db_c.fetchall()
 
     db_l = []
@@ -37,7 +36,7 @@ def get_db_set(db, d):
         try:
             # Ignore all kind of errors wholesale, i.e. duck typing
             item = db_d[i][0]
-            if not item.lower().endswith(".pdf"):
+            if not (item.lower().endswith(".pdf") or item.lower().endswith(".djvu")) :
                 continue
             if item.count('attachments:') > 0: # relative path
                 item = item.replace('attachments:', "")
@@ -53,7 +52,7 @@ def get_db_set(db, d):
     return db_set
 
 def get_dir_set(d):
-    rule = re.compile(fnmatch.translate("*.pdf"), re.IGNORECASE)
+    rule = re.compile("(?s:.*\\.(pdf|djvu))\\Z", re.IGNORECASE)
     matches = []
     for root, _dirnames, filenames in os.walk(d):
         for filename in [name for name in filenames if rule.match(name)]:
