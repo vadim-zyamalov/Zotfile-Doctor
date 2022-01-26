@@ -1,6 +1,8 @@
 Zotfile directory consistency checker
 ==============================
 
+**This is a fork of [giorginolab/zotfile_doctor](http://github.com/giorginolab/zotfile_doctor) which adds djvu support.**
+
 [Zotfile](http://zotfile.com) is an extension for
 [Zotero](https://www.zotero.org) reference manager software which
 maintains an organized directory of literature PDF files.
