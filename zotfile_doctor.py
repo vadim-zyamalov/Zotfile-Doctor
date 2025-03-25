@@ -57,7 +57,7 @@ def get_db_set(db, d):
             # file is not in zotfile directory
             continue
 
-        db_l.append(unicodedata.normalize("NFD", item).replace("\\", "/"))
+        db_l.append(unicodedata.normalize("NFD", os.path.normpath(item)))
 
     db_set = set(db_l)
     return db_set
@@ -72,7 +72,7 @@ def get_dir_set(d):
 
     fs = [os.path.relpath(f, start=d) for f in matches]
     fs = [unicodedata.normalize("NFD", x).lower() for x in fs]
-    fs = [x.replace("\\", "/") for x in fs]
+    fs = [os.path.normpath(x) for x in fs]
     d_set = set(fs)
     return d_set
 
