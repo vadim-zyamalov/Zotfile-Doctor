@@ -71,8 +71,9 @@ def get_dir_set(d):
             matches.append(os.path.join(root, filename))
 
     fs = [os.path.relpath(f, start=d) for f in matches]
-    fs = [unicodedata.normalize("NFD", x).lower() for x in fs]
-    fs = [os.path.normpath(x) for x in fs]
+    if not is_fs_case_sensitive():
+        fs = [x.lower() for x in fs]
+    fs = [unicodedata.normalize("NFD", os.path.normpath(x)) for x in fs]
     d_set = set(fs)
     return d_set
 
